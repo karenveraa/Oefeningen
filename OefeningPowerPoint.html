@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>City-Finder</title>
+	</head>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	
+	<body>
+		<div ng-app="CityApp" ng-controller="CityController">
+			<input ng-model="CityOfChoice">
+			<button ng-click="FetchCity()">Fetch</button>
+			
+			<ul>
+				<li ng-repeat="City in Cities"> 
+					{{City.city + " (" + City.state + " - " + City.country + ")"}}
+				</li>
+			</ul>
+		</div>
+	
+		<script>
+			var CityApp = angular.module("CityApp", []);
+		
+			CityApp.controller("CityController", function($scope, $http)
+			{ 
+				$scope.FavoCity = [ "Antwerpen", "Valencia", "Antranarivo", "Berlijn", "Parijs" ];
+				$scope.CityOfChoice = $scope.FavoCity [Math.floor(Math.random() * $scope.FavoCity.length)];
+			
+				$scope.FetchCity = function () {
+				var Query = "https://andruxnet-world-cities-v1.p.mashape.com/?query=" + $scope.CityOfChoice + "&searchby=city";
+				$http({
+					method: "GET", url: Query, headers: {
+						"X-Mashape-Key" : "28KQQZziX3mshu8PTfV45i31b2kfp1pZO4YjsnJlZgkl9FvsSj", "Accept" : "application/json" 
+						}
+					}).then (
+						function(response) {$scope.Cities = response.data; }
+					);
+				};
+			});
+			
+			
+		</script>
+	</body>
+</html>
